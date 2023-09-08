@@ -95,7 +95,7 @@
                                 </div>
                                 <ul class="user-login">
                                     <li>
-                                        <a href="{{ route('logout') }}"
+                                        <a href="{{ route('logout') }}" {{-- event.preventDefault(); this I made it to prevent redirecty process. --}}
                                             onclick="event.preventDefault(); document.getElementById('logout').submit()">Sign
                                             Out</a>
                                     </li>

@@ -256,7 +256,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         const user_id = {{ Auth::id() }};
     </script>
 
-    @vite('js/app.js')
+    @vite('resources/js/app.js')
 
     @stack('scripts')
 </body>

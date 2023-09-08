@@ -168,8 +168,8 @@ return [
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
-        App\Providers\FortifyServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
+        App\Providers\FortifyServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,

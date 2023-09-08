@@ -102,6 +102,7 @@ return [
     |
     */
 
+    // possible apply the limiters(throttle this's middleware.) on any request.
     'limiters' => [
         'login' => 'login',
         'two-factor' => 'two-factor',
@@ -118,6 +119,7 @@ return [
     |
     */
 
+    // if was false won't send the views will routes.
     'views' => true,
 
     /*
@@ -134,11 +136,13 @@ return [
     'features' => [
         Features::registration(),
         Features::resetPasswords(),
-        // Features::emailVerification(),
+        Features::emailVerification(),
         Features::updateProfileInformation(),
         Features::updatePasswords(),
         Features::twoFactorAuthentication([
-            'confirm' => true,
+            // 'confirm' => true,
+            // this to test.
+            'confirm' => false,
             'confirmPassword' => true,
             // 'window' => 0,
         ]),
