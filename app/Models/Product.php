@@ -20,6 +20,12 @@ class Product extends Model
         'options', 'rating', 'featured', 'status'
     ];
 
+    protected $hidden = [
+        'image',
+        'created_at', 'updated_at', 'deleted_at',
+    ];
+
+    // this property it use to make appends for image_url and property another in request in api.
     protected $appends = [
         'image_url'
     ];
@@ -30,6 +36,10 @@ class Product extends Model
         static::addGlobalScope('store', new StoreScope());
         // another way to identifier the scope
         // static::addGlobalScope(StoreScope::class);
+
+        static::creating(function (Product $product) {
+            $product->slug = Str::slug($product->name);
+        });
     }
 
     public function scopeActive(Builder $builder)
@@ -82,5 +92,49 @@ class Product extends Model
         }
 
         return round(100 - (100 * $this->price / $this->compare_price), 1);
+    }
+
+    public function scopeFilter(Builder $builder, $filters)
+    {
+        $options = array_merge([
+            'store_id' => null,
+            'category_id' => null,
+            'tag_id' => null,
+            'status' => 'active',
+        ], $filters);
+
+        $builder->when($options['status'], function ($builder, $value) {
+            $builder->where('status', $value);
+        });
+
+        $builder->when($options['store_id'], function ($builder, $value) {
+            $builder->where('store_id', '=', $value);
+        });
+
+        $builder->when($options['category_id'], function ($builder, $value) {
+            $builder->where('category_id', '=', $value);
+        });
+
+        $builder->when($options['tag_id'], function ($builder, $value) {
+
+            $builder->whereExists(function ($query) use ($value) {
+                $query->select(1)
+                    ->from('product_tag')
+                    ->whereRaw('product_id = products.id')
+                    ->where('tag_id', $value);
+            });
+
+
+            // $builder->whereRaw('id IN (SELECT product_id FROM product_tag WHERE tag_id =?)', $value);
+            // this's best as performance, mean using EXISTS.
+            //SELECT 1 it mean select anything.
+            // $builder->whereRaw('EXISTS (SELECT 1 FROM product_tag WHERE tag_id =? AND product_id = products.id)', $value);
+
+
+            //this's traditional way
+            // $builder->whereHas('tags', function ($builder) use ($value) {
+            //     $builder->where('id', '=', $value);
+            // });
+        });
     }
 }

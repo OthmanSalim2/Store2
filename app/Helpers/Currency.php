@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 use NumberFormatter;
 
 // use function PHPUnit\Framework\isNull;
@@ -20,13 +22,22 @@ class Currency
 
     public function format($amount, $currency = null)
     {
+        $baseCurrency = config('app.currency', 'USD');
+
         $locale = config('app.locale', 'en');
         $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
 
         if ($currency == null) {
             // if (isNull($currency)) {
-            $currency = config('app.currency', 'USD');
+            $currency = Session::get('currency_code', $baseCurrency);
         }
+
+
+        if ($currency != $baseCurrency) {
+            $rate = Cache::get('currency_rate_' . $currency, 1);
+            $amount = $amount * $rate;
+        }
+
         return $formatter->formatCurrency($amount, $currency);
     }
 }

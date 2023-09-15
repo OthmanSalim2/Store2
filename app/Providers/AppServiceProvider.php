@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Services\CurrencyConvertor;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceResponse;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Validator;
@@ -14,7 +17,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind('currency.convertor', function () {
+            return new CurrencyConvertor(config('services.currency_convertor.api_key'));
+        });
     }
 
     /**
@@ -22,6 +27,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+
+
+        // this's will remove the data key from response json.
+        // this's will applied on single product.
+        JsonResource::withoutWrapping();
 
         Validator::extend('filter', function ($attribute, $value, $params) {
             return !in_array(strtolower($value), $params);

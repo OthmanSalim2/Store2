@@ -3,11 +3,14 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CheckoutController;
+use App\Http\Controllers\Front\CurrencyConvertorController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\ProductsController;
 use App\Http\Controllers\Front\TwoFactorAuthenticationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -24,27 +27,36 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/', [HomeController::class, 'index'])
-    ->name('home');
+Route::group([
+    // 'prefix' => "{locale}",
+    'prefix' => LaravelLocalization::setLocale(),
 
-Route::get('/products', [ProductsController::class, 'index'])
-    ->name('products.index');
+], function () {
+    Route::get('/', [HomeController::class, 'index'])
+        ->name('home');
 
-Route::get('/products/{product}', [ProductsController::class, 'show'])
-    ->name('products.show');
+    Route::get('/products', [ProductsController::class, 'index'])
+        ->name('products.index');
 
-Route::resource('cart', CartController::class);
+    Route::get('/products/{product}', [ProductsController::class, 'show'])
+        ->name('products.show');
 
-Route::get('checkout', [CheckoutController::class, 'create'])->name('checkout');
-Route::post('checkout', [CheckoutController::class, 'store'])->name('checkout');
+    Route::resource('cart', CartController::class);
 
-Route::get('auth/user/2fa', [TwoFactorAuthenticationController::class, 'index'])
-    ->name('front.2fa');
+    Route::get('checkout', [CheckoutController::class, 'create'])->name('checkout');
+    Route::post('checkout', [CheckoutController::class, 'store'])->name('checkout');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('auth/user/2fa', [TwoFactorAuthenticationController::class, 'index'])
+        ->name('front.2fa');
+
+    Route::post('currency', [CurrencyConvertorController::class, 'store'])
+        ->name('currency.store');
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
 });
 
 // here I made comment for this lin to transfer from routes breeze to fortify.

@@ -8,6 +8,7 @@ use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -21,6 +22,12 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        // if (!Gate::allows('categories.view')) {
+        if (Gate::denies('categories.view')) {
+            // here possible using any way in error status.
+            abort(403);
+        }
+
         // $categories = Category::leftJoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
         //     ->select([
         //         'categories.*',
@@ -57,6 +64,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        // this automatic if was not allow will return 403 page (forbidden).
+        Gate::authorize('categories.create');
+
         $parents = Category::all();
         $category = new Category();
         return view('dashboard.categories.create', compact('category', 'parents'));

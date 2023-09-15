@@ -60,19 +60,23 @@
                     <td>{{ $category->status }}</td>
                     <td>{{ $category->created_at }}</td>
                     <td>
-                        <a href="{{ route('dashboard.categories.edit', $category->id) }}"
-                            class="btn btn-sm btn-outline-success">Edit</a>
+                        @can('categories.update')
+                            <a href="{{ route('dashboard.categories.edit', $category->id) }}"
+                                class="btn btn-sm btn-outline-success">Edit</a>
+                        @endcan
                     </td>
                     <td>
-                        {{-- the route of delete not direct link mean must sent by delete method  --}}
-                        <form action="{{ route('dashboard.categories.destroy', ['category' => $category]) }}"
-                            method="post">
-                            @csrf
-                            {{-- Form Method Spoofing --}}
-                            {{-- here I say to server work with this reponse as delete method --}}
-                            @method('delete')
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                        </form>
+                        @can('categories.delete')
+                            {{-- the route of delete not direct link mean must sent by delete method  --}}
+                            <form action="{{ route('dashboard.categories.destroy', ['category' => $category]) }}"
+                                method="post">
+                                @csrf
+                                {{-- Form Method Spoofing --}}
+                                {{-- here I say to server work with this reponse as delete method --}}
+                                @method('delete')
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        @endcan
                     </td>
                 </tr>
 
