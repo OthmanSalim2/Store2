@@ -13,6 +13,7 @@
         "laravel/fortify": "^1.17",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
+        "laravel/socialite": "^5.9",
         "laravel/tinker": "^2.8",
         "mbezhanov/faker-provider-collection": "^2.0",
         "mcamara/laravel-localization": "^1.8",

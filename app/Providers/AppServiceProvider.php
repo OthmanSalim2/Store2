@@ -20,6 +20,14 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind('currency.convertor', function () {
             return new CurrencyConvertor(config('services.currency_convertor.api_key'));
         });
+
+        if (App::environment('production')) {
+            // path.public this name laravel already known and it's stored in services container public_path().
+            $this->app->singleton('path.public', function () {
+                // public_html this name according of name of file in server.
+                return base_path('public_html');
+            });
+        }
     }
 
     /**
