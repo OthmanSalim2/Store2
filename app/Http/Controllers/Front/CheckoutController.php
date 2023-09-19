@@ -71,6 +71,8 @@ class CheckoutController extends Controller
 
             //event('order.created', $order, Auth::user());
             event(new OrderCreated($order));
+
+            return redirect()->route('orders.payments.create', $order->id);
         } catch (Throwable $e) {
             DB::rollBack();
             throw $e;

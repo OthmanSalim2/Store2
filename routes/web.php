@@ -70,9 +70,14 @@ Route::get('auth/{provider}/callback', [SocialLoginController::class, 'callback'
 
 Route::get('auth/{provider}/user', [SocialController::class, 'index']);
 
-Route::get('orders/{order}/pay', PaymentsController::class, 'create')
+Route::get('orders/{order}/pay', [PaymentsController::class, 'create'])
     ->name('orders.payments.create');
 
+Route::post('orders/{order}/stripe/payment-intent', [PaymentsController::class, 'createStripePaymentIntent'])
+    ->name('stripe.paymentIntent.create');
+
+Route::get('orders/{order}/pay/stripe', [PaymentsController::class, 'confirm'])
+    ->name('stripe.return');
 // here I made comment for this lin to transfer from routes breeze to fortify.
 // require __DIR__ . '/auth.php';
 
