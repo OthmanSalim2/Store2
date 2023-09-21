@@ -6,6 +6,7 @@ use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\CheckoutController;
 use App\Http\Controllers\Front\CurrencyConvertorController;
 use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\Front\OrdersController;
 use App\Http\Controllers\Front\PaymentsController;
 use App\Http\Controllers\Front\ProductsController;
 use App\Http\Controllers\Front\TwoFactorAuthenticationController;
@@ -78,6 +79,10 @@ Route::post('orders/{order}/stripe/payment-intent', [PaymentsController::class, 
 
 Route::get('orders/{order}/pay/stripe', [PaymentsController::class, 'confirm'])
     ->name('stripe.return');
+
+Route::get('/orders/{order}', [OrdersController::class, 'show'])
+    ->name('orders.show');
+
 // here I made comment for this lin to transfer from routes breeze to fortify.
 // require __DIR__ . '/auth.php';
 
